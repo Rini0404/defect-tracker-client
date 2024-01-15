@@ -6,3 +6,98 @@
   width: 100vw;
   background-color: #d0d4db;
 }
+
+
+.Header {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between;
+  height: 10vh;
+  width: 100%;
+}
+.App__header {
+  padding-top: 10px;
+}
+.Header__button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; 
+  flex-grow: 1; 
+  margin-right: 20px;
+}
+
+.ThreeCategoryButtons {
+  display: flex;
+  height: 10vh;
+  justify-content: center;
+  align-items: center;
+  width: 20vw;
+  padding-left: 20px;
+  overflow: hidden;
+}
+
+.ThreeCategoryButtons__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40%;
+  min-width: 50px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  margin-right: 10px;
+}
+
+.ThreeCategoryButtons__button__text {
+  font-size: 11px;
+  color: #fcf6f6;
+  font-weight: bold;
+  padding: 5px 10px; 
+}
+
+.ThreeCategoryButtons__button:nth-child(1) {
+  background-color: red; /* Background color for the first button */
+}
+
+.ThreeCategoryButtons__button:nth-child(2) {
+  background-color: orange; /* Background color for the second button */
+}
+
+.ThreeCategoryButtons__button:nth-child(3) {
+  background-color: purple; /* Background color for the third button */
+}
+
+.container__units {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-end;
+  position: relative; 
+  height: 7.5vh;
+  justify-content: center;
+  padding-right: 15px;
+  text-align: right; 
+}
+
+.container__units-text,
+.container__units-number {
+  margin: 0;
+  padding: 0;
+  width: 100%; /* Ensure full width for proper text alignment */
+}
+
+.container__units-number {
+  font-size: 14px;
+  padding-top: 7px;
+}
+
+.container__units::after {
+  content: ''; /* Required for pseudo-elements */
+  position: absolute;
+  right: 0; 
+  top: 0;
+  bottom: 0;
+  width: 5px; 
+  background-color: rgb(68, 153, 233);
+  height: 100%;
+  border-radius: 3px;
+}

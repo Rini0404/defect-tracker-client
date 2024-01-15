@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { DefectJsonTypes } from '../types';
 
 export const useFetchDefects = (url: string) => {
-  const [defects, setDefects] = useState(null);
+  const [defects, setDefects] = useState<DefectJsonTypes | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

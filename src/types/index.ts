@@ -35,6 +35,14 @@ export enum DefectType {
   Holes = 'Holes',
 }
 
-export type Error = {
-  message: string;
+
+export type DefectCategoryData = Array<{
+  length: number; timestamp: string 
+}>;
+
+export type DefectJsonTypes = {
+  [key: string]: DefectCategoryData | undefined;
+  HumanError?: DefectCategoryData;
+  MachineError?: DefectCategoryData;
+  ManufacturerError?: DefectCategoryData;
 };

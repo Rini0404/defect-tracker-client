@@ -5,6 +5,9 @@ import "./App.css";
 import { useFetchDefects } from "./hooks/fetchAllDefects";
 import { BASE_URL } from "./constants/baseUrl";
 import LoadingOverlay from "./components/Loading";
+import { Header } from "./components/Header";
+import { countDefects } from "./utils/counter";
+import { DefectColumn } from "./components/DefectCol";
 
 function App() {
   const { defects, loading, error } = useFetchDefects(
@@ -14,12 +17,12 @@ function App() {
   if (loading) return <LoadingOverlay open={loading} title="Loading Defects" />;
   if (error) return <div>Error: {error}</div>;
 
-  console.log("DEFECTS: ", defects);
+  const defectCounts = countDefects(defects ?? {});
+
+  console.log("defectCounts.total: ", defectCounts);
 
   return (
-    <div
-    className="App"
-    >
+    <div className="App">
       <Box
         sx={{
           width: "95vw",
@@ -29,7 +32,15 @@ function App() {
           overflow: "auto",
         }}
       >
-        {/* Your Box content here */}
+        <div className="App__header">
+          <Header defectCount={defectCounts.total} />
+        </div>
+
+        <div className="App__left-pannel">
+          <DefectColumn />
+        </div>
+
+
       </Box>
     </div>
   );
