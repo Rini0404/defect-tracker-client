@@ -7,6 +7,39 @@
   background-color: #d0d4db;
 }
 
+.App__left-pannel {
+  display: flex;
+  flex-direction: column;
+  width: 20vw;
+  background-color: #fcf6f6;
+}
+
+.DefectColumn {
+  max-width: 100%;
+}
+
+.DefectColumn::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.DefectColumn {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.DefectColumn table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.DefectColumn th, .DefectColumn td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: none; /* Remove lines */
+}
+
+
 
 .Header {
   display: flex;

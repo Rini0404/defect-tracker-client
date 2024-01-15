@@ -35,6 +35,12 @@ export enum DefectType {
   Holes = 'Holes',
 }
 
+export const defectCategoryMapping = {
+  HumanError: ['FoldOver', 'UpsideDown', 'Ghost', 'Color', 'Bruised', 'TopBottomVoid', 'TiltVoid', 'Degree180', 'Mismatch', 'SizeMixUp', 'Overlap', 'SidewaysFade'],
+  MachineError: ['Blur', 'Crispy', 'Faded', 'PrintError', 'Discoloration'],
+  ManufacturerError: ['ThreadVoid', 'FoldVoid', 'HeelVoid', 'FaultyYarn', 'Holes'],
+};
+
 
 export type DefectCategoryData = Array<{
   length: number; timestamp: string 
