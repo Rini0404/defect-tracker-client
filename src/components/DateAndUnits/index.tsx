@@ -3,6 +3,7 @@ import { Box, Button } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Modal from "@mui/material/Modal";
 import { CustomDateRangePicker } from "../CustomDatePicker";
+import { useSelector } from "react-redux";
 
 type DateAndUnitsProps = {
   defectCount: number;
@@ -10,6 +11,21 @@ type DateAndUnitsProps = {
 
 export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
   const [openModal, setOpenModal] = React.useState(false);
+
+  const { dateRange } = useSelector((state: any) => state.defects);
+
+  const { endDate } = dateRange;
+
+  const endDateObj = new Date(endDate);
+
+  const endDateLocal =
+    endDateObj instanceof Date && !isNaN(endDateObj.getTime())
+      ? endDateObj.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "Invalid Date";
 
   return (
     <div className="Header__button-container">
@@ -37,11 +53,8 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
         }}
       >
         <p style={{ fontSize: "12px" }}>
-          {new Date().toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
+          {/* endate to local  */}
+          {endDateLocal}
         </p>
       </Button>
 
@@ -58,9 +71,7 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <CustomDateRangePicker
-              setOpenModal={setOpenModal}
-            />
+            <CustomDateRangePicker setOpenModal={setOpenModal} />
           </Box>
         </Modal>
       )}
@@ -68,13 +79,12 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
   );
 };
 
-
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
   p: 2,
   borderRadius: "20px",
 };

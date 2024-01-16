@@ -65,22 +65,6 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
 }) => {
   const dispatch = useDispatch<any>();
 
-  const [dateRange, setDateRanges] = React.useState<(Date | null)[]>([
-    null,
-    null,
-  ]);
-  const [selectedRange, setSelectedRange] = React.useState("");
-
-  const handleRangeChange = (event: { target: { value: any } }) => {
-    const range = event.target.value;
-    setSelectedRange(range);
-    setDateRanges(
-      predefinedRanges[
-        range as keyof typeof predefinedRanges
-      ] as (Date | null)[]
-    );
-  };
-
   const [selectedDates, setSelectedDates] = React.useState<(Date | null)[]>([]);
   const [currentDate, setCurrentDate] = React.useState(new Date());
 
@@ -132,6 +116,17 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
     dispatch(updateDefectsByDate())
   };
 
+  const handleTreeItemClick = (rangeKey: string) => {
+    const rangeFunc = predefinedRanges[rangeKey as keyof typeof predefinedRanges];
+    if (rangeFunc) {
+      const rangeResult = rangeFunc;
+      const start = rangeResult[0];
+      const end = rangeResult[1];
+      setSelectedDates([start, end]);
+    }
+  };
+  
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.calendarAndTreeContainer}>
@@ -145,6 +140,7 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
                   paddingTop: "15%",
                   textAlign: "left",
                 }}
+                onClick={() => handleTreeItemClick(range)} // Add onClick handler here
               />
             ))}
           </TreeView>
@@ -218,7 +214,6 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
           }}
           onClick={() => {
             setSelectedDates([]);
-            setDateRanges([null, null]);
             setOpenModal(false);
           }}
         >
