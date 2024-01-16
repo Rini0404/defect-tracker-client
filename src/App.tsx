@@ -24,6 +24,7 @@ function App() {
   return (
     <div className="App">
       <Box
+      className="App__container"
         sx={{
           width: "95vw",
           height: "95vh",
