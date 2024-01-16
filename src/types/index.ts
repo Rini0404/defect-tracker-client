@@ -25,7 +25,7 @@ export enum DefectType {
   Crispy = 'Crispy',
   Faded = 'Faded',
   PrintError = 'PrintError',
-  Discoloration   = 'Discoloration',
+  Discoloration = 'Discoloration',
 
   // Manufacturer Error
   ThreadVoid = 'ThreadVoid',
@@ -44,11 +44,11 @@ export const defectCategoryMapping = {
 
 export type DefectCategoryData = Array<{
   defectType: DefectType;
-  length: number; timestamp: string 
+  length: number; timestamp: string
 }>;
 
 
-export type DefectData = { timestamp: string; /* other properties */ };
+export type DefectData = { timestamp: string; };
 export type DefectTypeData = { [key in DefectType]?: DefectData[] };
 
 export type DefectJsonTypes = {

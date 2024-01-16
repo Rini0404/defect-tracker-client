@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import React from "react";
 import Box from "@mui/material/Box";
 import "./App.css";
@@ -7,6 +8,9 @@ import LoadingOverlay from "./components/Loading";
 import { Header } from "./components/Header";
 import { countDefects } from "./utils/counter";
 import { DefectColumn } from "./components/DefectCol";
+import store from "./redux/store";
+import { Provider } from 'react-redux';
+
 
 function App() {
   const { defects, loading, error } = useFetchDefects(
@@ -48,4 +52,9 @@ function App() {
   );
 }
 
-export default App;
+export default () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+
