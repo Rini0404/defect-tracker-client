@@ -1,5 +1,4 @@
 /* eslint-disable import/no-anonymous-default-export */
-import React from "react";
 import Box from "@mui/material/Box";
 import "./App.css";
 import { useFetchDefects } from "./hooks/fetchAllDefects";
@@ -14,7 +13,7 @@ import { Provider } from 'react-redux';
 
 function App() {
   const { defects, loading, error } = useFetchDefects(
-    `${BASE_URL}getAllDefects`
+    `${BASE_URL}/getAllDefects`
   );
 
   if (loading) return <LoadingOverlay open={loading} title="Loading Defects" />;
@@ -42,7 +41,7 @@ function App() {
 
         <div className="App__left-pannel">
 
-        <DefectColumn defectsData={defects} />
+        <DefectColumn  />
 
         </div>
 

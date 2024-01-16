@@ -6,7 +6,6 @@ type DateAndUnitsProps = {
 };
 
 export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
-  console.log("defectCount", defectCount);
   return (
     <div className="Header__button-container">
       <Button

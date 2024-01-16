@@ -11,10 +11,10 @@ import {
   DefectType,
   defectCategoryMapping,
   DefectCategory,
-  DefectJsonTypes,
   DefectTypeData,
 } from "../../types";
 import { palette } from "../../theme";
+import { useSelector } from "react-redux";
 
 const getColorForDefectType = (defectType: DefectType) => {
   for (const [category, types] of Object.entries(defectCategoryMapping)) {
@@ -39,31 +39,26 @@ const formatDefectType = (defectType: string) => {
   return defectType.replace(/([A-Z])/g, " $1").trim();
 };
 
-export const DefectColumn: React.FC<{
-  defectsData: DefectJsonTypes | null;
-}> = ({ defectsData }) => {
-  if (!defectsData) return null;
+export const DefectColumn: React.FC = () => {
 
-  const todaysDate = "2024-01-15";
+  const { organizedDefects } = useSelector((state: any) => state.defects);
+
+  if (!organizedDefects) return null;
 
   // Function to count defects
   const countDefects = (defectType: DefectType) => {
     let count = 0;
-    for (const category of Object.keys(defectsData) as DefectCategory[]) {
-      const categoryData: DefectTypeData | undefined = defectsData[category];
+    for (const category of Object.keys(organizedDefects) as DefectCategory[]) {
+      const categoryData: DefectTypeData | undefined = organizedDefects[category];
       if (categoryData) {
         const defectsArray = categoryData[defectType];
         if (defectsArray) {
-          count += defectsArray.filter(
-            (defect) => defect.timestamp === todaysDate
-          ).length;
+          count += defectsArray.length;
         }
       }
     }
     return count;
   };
-
-  console.log(countDefects(DefectType.FoldOver));
 
   return (
     <TableContainer className="DefectColumn">
