@@ -6,9 +6,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
 } from "@mui/material";
-import { DefectType, defectCategoryMapping, DefectCategory } from "../../types";
+import {
+  DefectType,
+  defectCategoryMapping,
+  DefectCategory,
+  DefectJsonTypes,
+  DefectTypeData,
+} from "../../types";
 import { palette } from "../../theme";
 
 const getColorForDefectType = (defectType: DefectType) => {
@@ -16,11 +21,11 @@ const getColorForDefectType = (defectType: DefectType) => {
     if (types.includes(defectType)) {
       switch (category) {
         case DefectCategory.HumanError:
-          return palette.pastel.red
+          return palette.pastel.red;
         case DefectCategory.MachineError:
-          return palette.pastel.orange
+          return palette.pastel.orange;
         case DefectCategory.ManufacturerError:
-          return palette.pastel.purple
+          return palette.pastel.purple;
         default:
           return "none";
       }
@@ -34,10 +39,34 @@ const formatDefectType = (defectType: string) => {
   return defectType.replace(/([A-Z])/g, " $1").trim();
 };
 
-export const DefectColumn: React.FC = () => {
+export const DefectColumn: React.FC<{
+  defectsData: DefectJsonTypes | null;
+}> = ({ defectsData }) => {
+  if (!defectsData) return null;
+
+  const todaysDate = "2024-01-15";
+
+  // Function to count defects
+  const countDefects = (defectType: DefectType) => {
+    let count = 0;
+    for (const category of Object.keys(defectsData) as DefectCategory[]) {
+      const categoryData: DefectTypeData | undefined = defectsData[category];
+      if (categoryData) {
+        const defectsArray = categoryData[defectType];
+        if (defectsArray) {
+          count += defectsArray.filter(
+            (defect) => defect.timestamp === todaysDate
+          ).length;
+        }
+      }
+    }
+    return count;
+  };
+
+  console.log(countDefects(DefectType.FoldOver));
+
   return (
-    <TableContainer component={Paper} 
-    className="DefectColumn">
+    <TableContainer className="DefectColumn">
       <Table aria-label="defect table">
         <TableHead>
           <TableRow
@@ -47,8 +76,23 @@ export const DefectColumn: React.FC = () => {
               fontWeight: "bold",
             }}
           >
-            <TableCell>Defect Type</TableCell>
-            <TableCell align="right">Quantity</TableCell>
+            <TableCell
+              style={{
+                color: "black",
+                fontWeight: "bold",
+              }}
+            >
+              Defect Type
+            </TableCell>
+            <TableCell
+              style={{
+                color: "black",
+                fontWeight: "bold",
+              }}
+              align="right"
+            >
+              Quantity
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -60,7 +104,7 @@ export const DefectColumn: React.FC = () => {
               <TableCell component="th" scope="row">
                 {formatDefectType(defectType)}
               </TableCell>
-              <TableCell align="right">0</TableCell>
+              <TableCell align="right">{countDefects(defectType)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

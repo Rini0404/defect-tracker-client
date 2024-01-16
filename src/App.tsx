@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
 import Box from "@mui/material/Box";
 import "./App.css";
 import { useFetchDefects } from "./hooks/fetchAllDefects";
@@ -15,12 +14,12 @@ function App() {
   );
 
   if (loading) return <LoadingOverlay open={loading} title="Loading Defects" />;
+  
   if (error) return <div>Error: {error}</div>;
 
   const defectCounts = countDefects(defects ?? {});
-
-  console.log("defectCounts.total: ", defectCounts);
-
+  
+    
   return (
     <div className="App">
       <Box
@@ -38,7 +37,9 @@ function App() {
         </div>
 
         <div className="App__left-pannel">
-          <DefectColumn />
+
+        <DefectColumn defectsData={defects} />
+
         </div>
 
 

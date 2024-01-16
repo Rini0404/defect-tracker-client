@@ -6,6 +6,7 @@
   width: 100vw;
   background-color: #d0d4db;
 }
+
 .App__container {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -16,6 +17,7 @@
 
 .App__left-pannel {
   width: 20vw;
+  border-radius: 0%;
 }
 
 .DefectColumn::-webkit-scrollbar {
@@ -36,21 +38,22 @@
 
 .DefectColumn th,
 .DefectColumn td {
-  padding: 8px;
+  padding-left: 18%; /* Increase this value as needed */
+  padding-top: 8px;
+  padding-bottom: 8px;
   text-align: left;
-  border-bottom: none; /* Remove lines */
+  border-bottom: none;
 }
+
 
 .Header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 10vh;
-  width: 100%;
 }
+
 .App__header {
   padding-top: 10px;
 }
+
 .Header__button-container {
   display: flex;
   align-items: center;
@@ -62,29 +65,24 @@
 .ThreeCategoryButtons {
   display: flex;
   height: 10vh;
-  justify-content: center;
   align-items: center;
   width: 20vw;
-  padding-left: 20px;
   overflow: hidden;
 }
 
 .ThreeCategoryButtons__button {
   display: flex;
   align-items: center;
-  justify-content: center;
   height: 40%;
-  min-width: 50px;
+  min-width: 40px;
+  margin-left: 10px;
   border-radius: 20px;
-  border: none;
-  outline: none;
   margin-right: 10px;
 }
 
 .ThreeCategoryButtons__button__text {
-  font-size: 11px;
+  font-size: 16px;
   color: #fcf6f6;
-  font-weight: bold;
   padding: 5px 10px;
 }
 

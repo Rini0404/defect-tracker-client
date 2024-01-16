@@ -43,12 +43,14 @@ export const defectCategoryMapping = {
 
 
 export type DefectCategoryData = Array<{
+  defectType: DefectType;
   length: number; timestamp: string 
 }>;
 
+
+export type DefectData = { timestamp: string; /* other properties */ };
+export type DefectTypeData = { [key in DefectType]?: DefectData[] };
+
 export type DefectJsonTypes = {
-  [key: string]: DefectCategoryData | undefined;
-  HumanError?: DefectCategoryData;
-  MachineError?: DefectCategoryData;
-  ManufacturerError?: DefectCategoryData;
+  [key in DefectCategory]?: DefectTypeData;
 };

@@ -20,9 +20,10 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
           width: "auto",
           borderRadius: "20px",
           paddingLeft: "15px",
-          marginRight: "10px",
+          marginRight: "3%",
           // no shadow 
           boxShadow: "none",
+
         }}
         // on hover 
         onMouseOver={(e) => {
