@@ -8,8 +8,7 @@ import { Header } from "./components/Header";
 import { countDefects } from "./utils/counter";
 import { DefectColumn } from "./components/DefectCol";
 import store from "./redux/store";
-import { Provider } from 'react-redux';
-
+import { Provider } from "react-redux";
 
 function App() {
   const { defects, loading, error } = useFetchDefects(
@@ -17,16 +16,15 @@ function App() {
   );
 
   if (loading) return <LoadingOverlay open={loading} title="Loading Defects" />;
-  
+
   if (error) return <div>Error: {error}</div>;
 
   const defectCounts = countDefects(defects ?? {});
-  
-    
+
   return (
     <div className="App">
       <Box
-      className="App__container"
+        className="App__container"
         sx={{
           width: "95vw",
           height: "95vh",
@@ -40,12 +38,8 @@ function App() {
         </div>
 
         <div className="App__left-pannel">
-
-        <DefectColumn  />
-
+          <DefectColumn />
         </div>
-
-
       </Box>
     </div>
   );
@@ -56,4 +50,3 @@ export default () => (
     <App />
   </Provider>
 );
-

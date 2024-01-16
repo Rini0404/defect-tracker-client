@@ -1,11 +1,16 @@
-import { Button } from "@mui/material";
+import React from "react";
+import { Box, Button } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import Modal from "@mui/material/Modal";
+import { CustomDateRangePicker } from "../CustomDatePicker";
 
 type DateAndUnitsProps = {
   defectCount: number;
 };
 
 export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
+  const [openModal, setOpenModal] = React.useState(false);
+
   return (
     <div className="Header__button-container">
       <Button
@@ -20,13 +25,15 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
           borderRadius: "20px",
           paddingLeft: "15px",
           marginRight: "3%",
-          // no shadow 
+          // no shadow
           boxShadow: "none",
-
         }}
-        // on hover 
+        // on hover
         onMouseOver={(e) => {
           e.currentTarget.style.backgroundColor = "#E5E5E5";
+        }}
+        onClick={(e) => {
+          setOpenModal(true);
         }}
       >
         <p style={{ fontSize: "12px" }}>
@@ -43,7 +50,31 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
         <p className="container__units-number">You have {defectCount}</p>
       </div>
 
-      
+      {openModal && (
+        <Modal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <CustomDateRangePicker
+              setOpenModal={setOpenModal}
+            />
+          </Box>
+        </Modal>
+      )}
     </div>
   );
+};
+
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  p: 2,
+  borderRadius: "20px",
 };

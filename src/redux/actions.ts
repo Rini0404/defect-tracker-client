@@ -18,7 +18,7 @@ export const setDateRange = (startDate: string | null, endDate: string | null) =
 });
 
 
-const updateDefectsByDate = () => {
+export const updateDefectsByDate = () => {
     return {
         type: 'UPDATE_DEFECTS_BY_DATE'
     }
