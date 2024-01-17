@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -7,18 +8,18 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import {
-  DefectType,
-  DefectCategory,
-  DefectTypeData,
-} from "../../types";
+import { DefectType, DefectCategory, DefectTypeData } from "../../types";
 import { palette } from "../../theme";
 import { useSelector } from "react-redux";
 import { getColorForDefectType } from "../../utils/colorOutput";
 import { formatDefectType } from "../../utils/defectTypeTextFromat";
 
+export const DefectColumn: React.FC<{
+  isMobile: boolean;
+}> = ({
+  isMobile,
+}) => {
 
-export const DefectColumn: React.FC = () => {
 
   const { organizedDefects } = useSelector((state: any) => state.defects);
 
@@ -28,7 +29,8 @@ export const DefectColumn: React.FC = () => {
   const countDefects = (defectType: DefectType) => {
     let count = 0;
     for (const category of Object.keys(organizedDefects) as DefectCategory[]) {
-      const categoryData: DefectTypeData | undefined = organizedDefects[category];
+      const categoryData: DefectTypeData | undefined =
+        organizedDefects[category];
       if (categoryData) {
         const defectsArray = categoryData[defectType];
         if (defectsArray) {
@@ -40,7 +42,9 @@ export const DefectColumn: React.FC = () => {
   };
 
   return (
-    <TableContainer className="DefectColumn">
+    <Box sx={ isMobile ? style.isMobileContainer : style.container}>
+    <TableContainer className="DefectColumn"
+    >
       <Table aria-label="defect table">
         <TableHead>
           <TableRow
@@ -84,5 +88,20 @@ export const DefectColumn: React.FC = () => {
         </TableBody>
       </Table>
     </TableContainer>
+    </Box>
   );
+};
+
+const style = {
+  container: {
+    width: "30vw",
+    height: "100%",
+    borderRadius: "0px",
+    backgroundColor: 'red',
+  },
+  isMobileContainer: {
+    width: "100%",
+    height: "100%",
+    borderRadius: "0px",
+  },
 };

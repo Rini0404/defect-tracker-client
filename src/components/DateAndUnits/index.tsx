@@ -1,15 +1,20 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Modal from "@mui/material/Modal";
 import { CustomDateRangePicker } from "../CustomDatePicker";
 import { useSelector } from "react-redux";
+import { palette } from "../../theme";
 
 type DateAndUnitsProps = {
   defectCount: number;
+  isMobile: boolean;
 };
 
-export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
+export const DateAndUnits: React.FC<DateAndUnitsProps> = ({
+  defectCount,
+  isMobile,
+}) => {
   const [openModal, setOpenModal] = React.useState(false);
 
   const { dateRange } = useSelector((state: any) => state.defects);
@@ -28,22 +33,17 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
       : "Invalid Date";
 
   return (
-    <div className="Header__button-container">
+    <Box
+      sx={
+        isMobile
+          ? style.isMobileDateAndUnitsContainer
+          : style.dateAndUnitsContainer
+      }
+    >
       <Button
         variant="contained"
         startIcon={<CalendarMonthIcon />}
-        sx={{
-          backgroundColor: "#F2F2F2",
-          padding: "6px 12px",
-          color: "black",
-          height: "40px",
-          width: "auto",
-          borderRadius: "20px",
-          paddingLeft: "15px",
-          marginRight: "3%",
-          // no shadow
-          boxShadow: "none",
-        }}
+        sx={isMobile ? style.isMobileButton : style.button}
         // on hover
         onMouseOver={(e) => {
           e.currentTarget.style.backgroundColor = "#E5E5E5";
@@ -58,10 +58,22 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
         </p>
       </Button>
 
-      <div className="container__units">
+      <Box sx={isMobile ? style.isMobileUnitsContainer : style.unitsContainer}>
         <h4 className="container__units-text">Defective Units</h4>
         <p className="container__units-number">You have {defectCount}</p>
-      </div>
+      </Box>
+
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{
+          backgroundColor: palette.blues.light,
+          width: "5px",
+          height: "60px",
+          marginLeft: "1%",
+          borderRadius: "20px",
+        }}
+      />
 
       {openModal && (
         <Modal
@@ -70,21 +82,71 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({ defectCount }) => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box sx={style.modalBox}>
             <CustomDateRangePicker setOpenModal={setOpenModal} />
           </Box>
         </Modal>
       )}
-    </div>
+    </Box>
   );
 };
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  p: 2,
-  borderRadius: "20px",
+  unitsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    marginRight: "0%",
+  },
+  isMobileUnitsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    marginRight: "3%",
+  },
+  button: {
+    backgroundColor: "#F2F2F2",
+    padding: "6px 12px",
+    color: "black",
+    height: "40px",
+    width: "auto",
+    borderRadius: "20px",
+    paddingLeft: "15px",
+    marginRight: "3%",
+    // no shadow
+    boxShadow: "none",
+  },
+  isMobileButton: {
+    backgroundColor: "#F2F2F2",
+    color: "black",
+    height: "45px",
+    borderRadius: "20px",
+    boxShadow: "none",
+    marginLeft: "3%",
+  },
+  isMobileDateAndUnitsContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexGrowth: "1",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  dateAndUnitsContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexGrowth: "1",
+    justifyContent: "flex-end",
+    width: "100%",
+    height: "100%",
+  },
+
+  modalBox: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    p: 2,
+    borderRadius: "20px",
+  },
 };
