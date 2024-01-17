@@ -1,5 +1,5 @@
-import { DefectJsonTypes } from "../types";
-import { INJECT_DEFECTS, SET_DATE_RANGE } from "./types";
+import { DefectCategory, DefectJsonTypes } from "../types";
+import { ADD_SINGLE_DEFECT, INJECT_DEFECTS, SET_DATE_RANGE, UPDATE_DEFECTS_BY_DATE } from "./types";
 
 
 
@@ -20,7 +20,14 @@ export const setDateRange = (startDate: string | null, endDate: string | null) =
 
 export const updateDefectsByDate = () => {
     return {
-        type: 'UPDATE_DEFECTS_BY_DATE'
+        type: UPDATE_DEFECTS_BY_DATE
+    }
+}
+
+export const addSingleDefect = (defectType: string, timestamp: string, defectCategory: DefectCategory) => {
+    return {
+        type: ADD_SINGLE_DEFECT,
+        defect: { defectType, timestamp, defectCategory }
     }
 }
 

@@ -9,35 +9,14 @@ import {
 } from "@mui/material";
 import {
   DefectType,
-  defectCategoryMapping,
   DefectCategory,
   DefectTypeData,
 } from "../../types";
 import { palette } from "../../theme";
 import { useSelector } from "react-redux";
+import { getColorForDefectType } from "../../utils/colorOutput";
+import { formatDefectType } from "../../utils/defectTypeTextFromat";
 
-const getColorForDefectType = (defectType: DefectType) => {
-  for (const [category, types] of Object.entries(defectCategoryMapping)) {
-    if (types.includes(defectType)) {
-      switch (category) {
-        case DefectCategory.HumanError:
-          return palette.pastel.red;
-        case DefectCategory.MachineError:
-          return palette.pastel.orange;
-        case DefectCategory.ManufacturerError:
-          return palette.pastel.purple;
-        default:
-          return "none";
-      }
-    }
-  }
-  return "none";
-};
-
-const formatDefectType = (defectType: string) => {
-  // Split the string at each uppercase letter and join with a space
-  return defectType.replace(/([A-Z])/g, " $1").trim();
-};
 
 export const DefectColumn: React.FC = () => {
 

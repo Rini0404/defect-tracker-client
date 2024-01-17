@@ -1,5 +1,5 @@
 import { DefectCategory, DefectData, DefectJsonTypes } from "../types";
-import { INJECT_DEFECTS, SET_DATE_RANGE, UPDATE_DEFECTS_BY_DATE } from "./types";
+import { ADD_SINGLE_DEFECT, INJECT_DEFECTS, SET_DATE_RANGE, UPDATE_DEFECTS_BY_DATE } from "./types";
 
 interface DataType {
   allDefects: DefectJsonTypes;
@@ -13,8 +13,9 @@ interface DataType {
 }
 
 interface DefectState {
-  type: typeof INJECT_DEFECTS | typeof SET_DATE_RANGE | typeof UPDATE_DEFECTS_BY_DATE;
+  type: typeof INJECT_DEFECTS | typeof SET_DATE_RANGE | typeof UPDATE_DEFECTS_BY_DATE | typeof ADD_SINGLE_DEFECT;
   data: DataType;
+  defect: { defectType: string; timestamp: string; defectCategory: DefectCategory };
 }
 
 
@@ -45,7 +46,6 @@ const defectReducer = (state = initialState, action: DefectState) => {
           endDate: action.data.dateRange.endDate,
         },
       };
-
     case UPDATE_DEFECTS_BY_DATE: {
       const { startDate, endDate } = state.dateRange;
       const organizedDefects: DefectJsonTypes = {};
@@ -74,6 +74,49 @@ const defectReducer = (state = initialState, action: DefectState) => {
         organizedDefects,
       };
     }
+    case ADD_SINGLE_DEFECT: {
+      const { defectType, timestamp, defectCategory } = action.defect;
+      const newDefect = { defectType, timestamp, category: defectCategory };
+
+      // Update allDefects
+      const updatedAllDefects = {
+        ...state.allDefects,
+        [defectCategory]: {
+          ...state.allDefects[defectCategory],
+          [defectType]: [
+            ...(state.allDefects[defectCategory]?.[defectType] || []),
+            newDefect,
+          ],
+        },
+      };
+
+      // Check if the new defect falls within the date range
+      const defectDate = new Date(timestamp);
+      const startDate = state.dateRange.startDate ? new Date(state.dateRange.startDate) : new Date(0);
+      const endDate = state.dateRange.endDate ? new Date(state.dateRange.endDate) : new Date();
+
+      let updatedOrganizedDefects = { ...state.organizedDefects };
+
+      if (defectDate >= startDate && defectDate <= endDate) {
+        updatedOrganizedDefects = {
+          ...state.organizedDefects,
+          [defectCategory]: {
+            ...state.organizedDefects[defectCategory],
+            [defectType]: [
+              ...(state.organizedDefects[defectCategory]?.[defectType] || []),
+              newDefect,
+            ],
+          },
+        };
+      }
+      console.log('updatedAllDefects', updatedAllDefects)
+      return {
+        ...state,
+        allDefects: updatedAllDefects,
+        organizedDefects: updatedOrganizedDefects,
+      };
+    }
+
     default:
       return state;
   }

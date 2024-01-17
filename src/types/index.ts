@@ -36,9 +36,9 @@ export enum DefectType {
 }
 
 export const defectCategoryMapping = {
-  HumanError: ['FoldOver', 'UpsideDown', 'Ghost', 'Color', 'Bruised', 'TopBottomVoid', 'TiltVoid', 'Degree180', 'Mismatch', 'SizeMixUp', 'Overlap', 'SidewaysFade'],
-  MachineError: ['Blur', 'Crispy', 'Faded', 'PrintError', 'Discoloration'],
-  ManufacturerError: ['ThreadVoid', 'FoldVoid', 'HeelVoid', 'FaultyYarn', 'Holes'],
+  HumanError: [DefectType.FoldOver, DefectType.UpsideDown, DefectType.Ghost, DefectType.Color, DefectType.Bruised, DefectType.TopBottomVoid, DefectType.TiltVoid, DefectType.Degree180, DefectType.Mismatch, DefectType.SizeMixUp, DefectType.Overlap, DefectType.SidewaysFade],
+  MachineError: [DefectType.Blur, DefectType.Crispy, DefectType.Faded, DefectType.PrintError, DefectType.Discoloration],
+  ManufacturerError: [DefectType.ThreadVoid, DefectType.FoldVoid, DefectType.HeelVoid, DefectType.FaultyYarn, DefectType.Holes],
 };
 
 
@@ -52,5 +52,7 @@ export type DefectData = { timestamp: string; };
 export type DefectTypeData = { [key in DefectType]?: DefectData[] };
 
 export type DefectJsonTypes = {
-  [key in DefectCategory]?: DefectTypeData;
+  [category: string]: {
+    [defectType: string]: DefectData[];
+  };
 };
