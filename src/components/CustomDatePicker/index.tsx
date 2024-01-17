@@ -1,7 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { TreeView } from "@mui/x-tree-view/TreeView";
-import { Button } from "@mui/material";
+import { Button, Menu, MenuItem } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { grey } from "@mui/material/colors";
 import SimpleCalendar from "../Calendar";
@@ -58,10 +58,12 @@ const predefinedRanges = {
 
 type CustomProps = {
   setOpenModal: (opened: boolean) => void;
+  isMobile: boolean;
 };
 
 export const CustomDateRangePicker: React.FC<CustomProps> = ({
   setOpenModal,
+  isMobile,
 }) => {
   const dispatch = useDispatch<any>();
 
@@ -113,11 +115,12 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
     dispatch(
       setDateRange(startDay?.toString() ?? null, endDay?.toString() ?? null)
     );
-    dispatch(updateDefectsByDate())
+    dispatch(updateDefectsByDate());
   };
 
   const handleTreeItemClick = (rangeKey: string) => {
-    const rangeFunc = predefinedRanges[rangeKey as keyof typeof predefinedRanges];
+    const rangeFunc =
+      predefinedRanges[rangeKey as keyof typeof predefinedRanges];
     if (rangeFunc) {
       const rangeResult = rangeFunc;
       const start = rangeResult[0];
@@ -125,28 +128,120 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
       setSelectedDates([start, end]);
     }
   };
-  
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
-    <Box sx={styles.container}>
-      <Box sx={styles.calendarAndTreeContainer}>
-        <Box sx={styles.tree}>
-          <TreeView aria-label="customized" multiSelect>
-            {Object.keys(predefinedRanges).map((range) => (
-              <TreeItem
-                nodeId={range}
-                label={range}
-                style={{
-                  paddingTop: "15%",
-                  textAlign: "left",
+    <Box sx={isMobile ? styles.isMobileContainer : styles.container}>
+      <Box
+        sx={{
+          display: !isMobile ? "flex" : "",
+        }}
+      >
+        {isMobile ? (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                id="demo-positioned-button"
+                variant="outlined"
+                aria-controls={open ? "demo-positioned-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                Select Date Range
+              </Button>
+              <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
                 }}
-                onClick={() => handleTreeItemClick(range)} // Add onClick handler here
-              />
-            ))}
-          </TreeView>
-        </Box>
-        <Box sx={styles.calendarContainer}>
-          {/* New container for stacking date range and calendars */}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                {Object.keys(predefinedRanges).map((range) => (
+                  <MenuItem
+                    key={range}
+                    onClick={() => {
+                      handleTreeItemClick(range);
+                      handleClose();
+                    }}
+                  >
+                    {range}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            <Box sx={styles.mobileDateRangeBox}>
+              {isMobile && selectedDates[0] && !selectedDates[1] && (
+                <Box sx={styles.mobileFakeDateBox}> {"  "}</Box>
+              )}
+              {isMobile && !selectedDates[0] && !selectedDates[1] && (
+                <Box sx={styles.mobileFakeDateBox}> {"  "}</Box>
+              )}
+              {isMobile && selectedDates[0] && selectedDates[1] && (
+                <>
+                  <Box sx={styles.mobileDateBox}>
+                    {formatDate(selectedDates[0])}
+                  </Box>
+                  <ArrowForwardIcon
+                    fontSize="small"
+                    style={{
+                      margin: "0 15px",
+                    }}
+                  />
+                  <Box sx={styles.mobileDateBox}>
+                    {formatDate(selectedDates[1])}
+                  </Box>
+                </>
+              )}
+            </Box>
+          </>
+        ) : (
+          <Box sx={styles.tree}>
+            <TreeView aria-label="customized" multiSelect>
+              {Object.keys(predefinedRanges).map((range) => (
+                <TreeItem
+                  nodeId={range}
+                  label={range}
+                  style={{
+                    paddingTop: "15%",
+                    textAlign: "left",
+                  }}
+                  onClick={() => handleTreeItemClick(range)} // Add onClick handler here
+                />
+              ))}
+            </TreeView>
+          </Box>
+        )}
+
+        <Box
+          sx={
+            isMobile
+              ? styles.isMobileCalendarContainer
+              : styles.calendarContainer
+          }
+        >
           <Box
             sx={{
               display: "flex",
@@ -157,13 +252,13 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
             }}
           >
             <Box sx={styles.dateRangeBox}>
-              {selectedDates[0] && !selectedDates[1] && (
+              {!isMobile && selectedDates[0] && !selectedDates[1] && (
                 <Box sx={styles.fakeDateBox}> {"  "}</Box>
               )}
-              {!selectedDates[0] && !selectedDates[1] && (
+              {!isMobile && !selectedDates[0] && !selectedDates[1] && (
                 <Box sx={styles.fakeDateBox}> {"  "}</Box>
               )}
-              {selectedDates[0] && selectedDates[1] && (
+              {!isMobile && selectedDates[0] && selectedDates[1] && (
                 <>
                   <Box sx={styles.dateBox}>{formatDate(selectedDates[0])}</Box>
                   <ArrowForwardIcon
@@ -177,14 +272,14 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
               )}
             </Box>
 
-            {/* Calendars Display */}
             <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
+              sx={
+                isMobile
+                  ? styles.isMobileDualCalendarContainer
+                  : styles.dualCalendarContainer
+              }
             >
+
               <SimpleCalendar
                 selectedDates={selectedDates}
                 date={previousMonthDate}
@@ -192,6 +287,7 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
                 onSelectDay={onSelectDay}
                 onChangeMonth={() => handleChangeMonth("left", 1)}
               />
+
               <SimpleCalendar
                 selectedDates={selectedDates}
                 date={currentDate}
@@ -203,7 +299,6 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
           </Box>
         </Box>
       </Box>
-
       <Box sx={styles.buttonContainer}>
         <Button
           variant="contained"
@@ -211,6 +306,7 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
             ...styles.button,
             backgroundColor: color,
             color: "black",
+            width: isMobile ? "125px" : "10%",
           }}
           onClick={() => {
             setSelectedDates([]);
@@ -226,7 +322,10 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
           }}
           variant="contained"
           color="primary"
-          style={styles.button}
+          style={{
+            ...styles.button,
+            width: isMobile ? "125px" : "10%",
+          }}
         >
           Apply
         </Button>
@@ -236,8 +335,30 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
 };
 
 const styles = {
+  dualCalendarContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    justifyContent: "space-evenly",
+  },
+  isMobileDualCalendarContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  mobileDateRangeBox: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    borderBottom: "1px solid lightgrey",
+  },
   dateRangeBox: {
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: "10px",
@@ -249,16 +370,33 @@ const styles = {
     margin: "5px",
     width: "350px",
   },
+  mobileDateBox: {
+    padding: "10px",
+    border: "1px solid lightgrey",
+    borderRadius: "5px",
+    margin: "5px",
+    width: "100px",
+  },
   fakeDateBox: {
     padding: "10px",
     borderRadius: "5px",
     width: "350px",
     height: "29px",
   },
+  mobileFakeDateBox: {
+    padding: "10px",
+    borderRadius: "5px",
+    height: "29px",
+  },
   container: {
     display: "flex",
     width: "70vw",
     height: "70vh",
+  },
+  isMobileContainer: {
+    display: "flex",
+    width: "90vw",
+    height: "95vh",
   },
   tree: {
     height: "85%",
@@ -271,6 +409,13 @@ const styles = {
     height: "85%",
     width: "100%",
     borderBottom: "0.5px solid gray",
+    justifyContent: "center",
+    alignItems: "center",
+    display: "flex",
+  },
+  isMobileCalendarContainer: {
+    height: "85%",
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
     display: "flex",

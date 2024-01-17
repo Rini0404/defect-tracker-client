@@ -71,7 +71,7 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({
           width: "5px",
           height: "60px",
           marginLeft: "1%",
-          borderRadius: "20px",
+          borderRadius: "50px",
         }}
       />
 
@@ -83,7 +83,10 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.modalBox}>
-            <CustomDateRangePicker setOpenModal={setOpenModal} />
+            <CustomDateRangePicker
+              isMobile={isMobile}
+              setOpenModal={setOpenModal}
+            />
           </Box>
         </Modal>
       )}
@@ -101,8 +104,7 @@ const style = {
   isMobileUnitsContainer: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-end",
-    marginRight: "3%",
+    textAlign: "right",
   },
   button: {
     backgroundColor: "#F2F2F2",
@@ -139,7 +141,6 @@ const style = {
     width: "100%",
     height: "100%",
   },
-
   modalBox: {
     position: "absolute",
     top: "50%",

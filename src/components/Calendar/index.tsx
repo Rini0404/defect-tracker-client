@@ -155,31 +155,34 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
       <Box
         sx={{
           ...styles.header,
+          ...(isMobile && styles.headerIsMobile),
           ...(side === "center" && {
             paddingTop: "8px",
             paddingBottom: "8px",
           }),
         }}
       >
-        {side === "left" && (
-          <ArrowBackIcon
-            fontSize="medium"
-            onClick={() => onChangeMonth("left")}
-            style={{
-              float: "left",
-            }}
-          />
-        )}
-        {side === "center" && (
-          <ArrowBackIcon
-            fontSize="medium"
-            onClick={() => onChangeMonth("left")}
-            style={{
-              float: "left",
-              paddingLeft: "10px",
-            }}
-          />
-        )}
+        <Box sx={styles.iconWrapper}>
+          {side === "left" && (
+            <ArrowBackIcon
+              fontSize="medium"
+              onClick={() => onChangeMonth("left")}
+              style={{
+                float: "left",
+              }}
+            />
+          )}
+          {side === "center" && (
+            <ArrowBackIcon
+              fontSize="medium"
+              onClick={() => onChangeMonth("left")}
+              style={{
+                float: "left",
+                paddingLeft: "10px",
+              }}
+            />
+          )}
+        </Box>
         <Typography
           variant="h6"
           component="span"
@@ -191,25 +194,27 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
             month: "long",
           })} ${date.getFullYear()}`}
         </Typography>
-        {side === "right" && (
-          <ArrowForwardIcon
-            fontSize="medium"
-            onClick={() => onChangeMonth("right")}
-            style={{
-              float: "right",
-            }}
-          />
-        )}
-        {side === "center" && (
-          <ArrowForwardIcon
-            fontSize="medium"
-            onClick={() => onChangeMonth("right")}
-            style={{
-              float: "right",
-              paddingRight: "10px",
-            }}
-          />
-        )}
+        <Box sx={styles.iconWrapper}>
+          {side === "right" && (
+            <ArrowForwardIcon
+              fontSize="medium"
+              onClick={() => onChangeMonth("right")}
+              style={{
+                float: "right",
+              }}
+            />
+          )}
+          {side === "center" && (
+            <ArrowForwardIcon
+              fontSize="medium"
+              onClick={() => onChangeMonth("right")}
+              style={{
+                float: "right",
+                paddingRight: "10px",
+              }}
+            />
+          )}
+        </Box>
       </Box>
       <Box sx={styles.weekDays}>
         {daysOfWeek.map((day, index) => (
@@ -247,6 +252,22 @@ const stylesIsMobile = {
 };
 
 const styles = {
+  headerIsMobile: {
+    justifyContent: "space-between",
+  },
+  iconWrapper: {
+    flex: "0 0 auto", // Ensure icons do not stretch
+  },
+  monthText: {
+    flex: "1 0 auto", // Allow text to take available space
+    textAlign: "center", // Center text
+  },
+  centerStyle: {
+    backgroundColor: "white",
+    width: "65%",
+    height: "350px",
+    borderRadius: "10px",
+  },
   dateRangeBox: {
     display: "flex",
     justifyContent: "center",
@@ -271,20 +292,17 @@ const styles = {
   calendar: {
     display: "flex",
     flexDirection: "column",
-    padding: "10px",
-    margin: "5px",
-    width: "40%",
-    // backgroundColor: "pink",
+    padding: "5px",
+    width: "43%",
     boxSizing: "border-box",
     height: "350px", // Set a fixed height
     overflow: "hidden", // Hide overflow
   },
   header: {
-    textAlign: "center",
-    marginBottom: "10px",
-    justifyContent: "space-between",
-    alignItems: "center",
     display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "10px",
   },
   weekDays: {
     display: "flex",

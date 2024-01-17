@@ -72,14 +72,7 @@ function App() {
       </Box>
       <Button
         variant="contained"
-        sx={{
-          position: "absolute",
-          bottom: "10px",
-          right: "10px",
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: "20px",
-        }}
+        sx={isMobile ? style.isMobileButton : style.button}
         onClick={() => setOpenPostModal(true)}
       >
         Add Defect
@@ -96,6 +89,23 @@ export default () => (
 );
 
 const style = {
+  button: {
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "20px",
+  },
+  isMobileButton: {
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "20px",
+    width: "100px",
+  },
   defectCountAnPichartContainer: {
     display: "flex",
     flexDirection: "row",
