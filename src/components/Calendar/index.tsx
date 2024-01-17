@@ -1,14 +1,14 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Button, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { palette } from "../../theme";
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+import { daysOfWeek } from "../../constants/days";
 
 type CelendarProps = {
   date: Date;
-  side: "left" | "right";
+  side: "left" | "right" | "center";
   selectedDates: any[];
   onSelectDay: (date: Date) => void;
   onChangeMonth: (direction: "left" | "right") => void;
@@ -21,6 +21,20 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
   onChangeMonth,
   selectedDates,
 }) => {
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 768;
+
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -125,10 +139,28 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
   };
 
   return (
-    <Box sx={styles.calendar}>
-
-
-      <Box sx={styles.header}>
+    <Box
+      sx={{
+        ...styles.calendar,
+        ...(isMobile && stylesIsMobile.mainContainer),
+        ...(side === "center" &&
+          !isMobile && {
+            backgroundColor: "white",
+            width: "65%",
+            height: "350px",
+            borderRadius: "10px",
+          }),
+      }}
+    >
+      <Box
+        sx={{
+          ...styles.header,
+          ...(side === "center" && {
+            paddingTop: "8px",
+            paddingBottom: "8px",
+          }),
+        }}
+      >
         {side === "left" && (
           <ArrowBackIcon
             fontSize="medium"
@@ -138,7 +170,19 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
             }}
           />
         )}
-        <Typography variant="h6" component="span" 
+        {side === "center" && (
+          <ArrowBackIcon
+            fontSize="medium"
+            onClick={() => onChangeMonth("left")}
+            style={{
+              float: "left",
+              paddingLeft: "10px",
+            }}
+          />
+        )}
+        <Typography
+          variant="h6"
+          component="span"
           style={{
             fontWeight: "bold",
           }}
@@ -156,6 +200,16 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
             }}
           />
         )}
+        {side === "center" && (
+          <ArrowForwardIcon
+            fontSize="medium"
+            onClick={() => onChangeMonth("right")}
+            style={{
+              float: "right",
+              paddingRight: "10px",
+            }}
+          />
+        )}
       </Box>
       <Box sx={styles.weekDays}>
         {daysOfWeek.map((day, index) => (
@@ -165,22 +219,54 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
         ))}
       </Box>
       <Box sx={styles.days}>{calendarDays}</Box>
+
+      {side === "center" && (
+        <Box sx={styles.okButton}>
+          <Button
+            style={{
+              borderRadius: "20px",
+              width: "75px",
+            }}
+            variant="contained"
+          >
+            OK
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
 
+const stylesIsMobile = {
+  mainContainer: {
+    backgroundColor: "white",
+    width: "100%",
+    height: "350px",
+    borderRadius: "10px",
+  },
+};
+
 const styles = {
   dateRangeBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: '10px',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: "10px",
+  },
+  okButton: {
+    display: "flex",
+    justifyContent: "flex-end",
+    bottom: "0",
+    right: "0",
+    marginRight: "20px",
+    marginBottom: "20px",
+    position: "absolute",
   },
   dateBox: {
-    padding: '5px',
-    border: '1px solid black',
-    borderRadius: '5px',
-    margin: '5px',
+    padding: "5px",
+    border: "1px solid black",
+    borderRadius: "5px",
+    margin: "5px",
   },
   calendar: {
     display: "flex",
@@ -196,6 +282,9 @@ const styles = {
   header: {
     textAlign: "center",
     marginBottom: "10px",
+    justifyContent: "space-between",
+    alignItems: "center",
+    display: "flex",
   },
   weekDays: {
     display: "flex",
