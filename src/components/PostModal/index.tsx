@@ -106,7 +106,7 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
       }
 
       const contentType = response.headers.get("content-type");
-      
+
       if (!contentType || !contentType.includes("application/json")) {
         throw new Error(`Expected JSON, but received ${contentType}`);
       }
@@ -170,7 +170,7 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
                       sx={{
                         borderRadius: "10px",
                         marginTop: "0px",
-                        height: "100px",
+                        height: "80px",
                         width: "75px",
                         display: "flex",
                         justifyContent: "center",
@@ -367,8 +367,8 @@ const style = {
     bgcolor: "background.paper",
     p: 2,
     borderRadius: "20px",
-    height: { xs: "87vh", md: "90vh" }, // adjust height based on screen size
-    width: { xs: "95vw", md: "55vw" }, // adjust width based on screen size
+    height: { xs: "85vh", md: "90vh" }, // adjust height based on screen size
+    width: { xs: "88vw", md: "55vw" }, // adjust width based on screen size
     boxShadow: 24,
     display: "flex",
     flexDirection: "column",

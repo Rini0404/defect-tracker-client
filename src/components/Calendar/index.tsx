@@ -162,6 +162,15 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
             height: "350px",
             borderRadius: "10px",
           }),
+          ...(side === "center" &&
+          isMobile && {
+            justifyContent: "center",
+            width: "100%",
+            height: "350px",
+            backgroundColor: "white",
+            borderRadius: "10px",
+            marginBottom: "10px",
+          }),
       }}
     >
       <Box
@@ -230,7 +239,7 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
       </Box>
       <Box sx={styles.weekDays}>
         {daysOfWeek.map((day, index) => (
-          <Box key={index} sx={styles.day}>
+          <Box key={index} sx={ isMobile ? styles.isMobileDay : styles.day}>
             {day}
           </Box>
         ))}
@@ -257,10 +266,12 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
 
 const stylesIsMobile = {
   mainContainer: {
+    justifyContent: "center",
+    width: "90%",
+    height: "300px",
     backgroundColor: "white",
-    width: "100%",
-    height: "350px",
     borderRadius: "10px",
+    marginBottom: "10px",
   },
 };
 
@@ -324,7 +335,6 @@ const styles = {
   weekDays: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-around", // Adjust space between week days
   },
   dayHeader: {
     flex: "0 0 14.28%", // Set fixed width (100% / 7 days)
@@ -342,7 +352,14 @@ const styles = {
     cursor: "pointer",
     boxSizing: "border-box", // Ensures padding is included in width
   },
-
+  isMobileDay: {
+    flex: "0 0 0%", 
+    textAlign: "center",
+    padding: "10px",
+    cursor: "pointer",
+    boxSizing: "border-box", // Ensures padding is included in width
+    width: "100%",
+  },
   inRangeDay: {
     backgroundColor: palette.blues.extraLight,
   },

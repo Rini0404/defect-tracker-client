@@ -299,7 +299,7 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
           </Box>
         </Box>
       </Box>
-      <Box sx={styles.buttonContainer}>
+      <Box sx={ isMobile ? styles.mobileButtonContainer : styles.buttonContainer}>
         <Button
           variant="contained"
           style={{
@@ -346,6 +346,9 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: "40px",
   },
   mobileDateRangeBox: {
     display: "flex",
@@ -396,7 +399,7 @@ const styles = {
   isMobileContainer: {
     display: "flex",
     width: "90vw",
-    height: "87vh",
+    height: "86vh",
   },
   tree: {
     height: "85%",
@@ -430,6 +433,16 @@ const styles = {
     padding: "10px",
     position: "absolute",
     bottom: "3%",
+    right: "1%",
+    width: "100%",
+  },
+  mobileButtonContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: "10px",
+    position: "absolute",
+    bottom: "0.5%",
     right: "1%",
     width: "100%",
   },
