@@ -12,6 +12,7 @@ type CelendarProps = {
   selectedDates: any[];
   onSelectDay: (date: Date) => void;
   onChangeMonth: (direction: "left" | "right") => void;
+  closeModal?: () => void;
 };
 
 const SimpleCalendar: React.FC<CelendarProps> = ({
@@ -20,6 +21,7 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
   onSelectDay,
   onChangeMonth,
   selectedDates,
+  closeModal,
 }) => {
   const [width, setWidth] = useState<number>(window.innerWidth);
 
@@ -45,7 +47,14 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
     date.getMonth(),
     1
   ).getDay();
+  
+  const isFutureDay = (day: number) => {
+    const today = new Date();
+    const dayToCheck = new Date(date.getFullYear(), date.getMonth(), day);
+    return dayToCheck > today;
+  };
 
+  
   // Generate days
   const calendarDays = [];
 
@@ -110,6 +119,8 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
     const dayIsFirstSelected = isFirstSelectedDay(i);
     const dayIsLastSelected = isLastSelectedDay(i);
     const dayIsSingleSelected = isSingleSelectedDay(i);
+    const dayIsFuture = isFutureDay(i);
+
 
     calendarDays.push(
       <Box
@@ -120,9 +131,10 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
           ...(dayIsFirstSelected && styles.firstSelectedDay),
           ...(dayIsLastSelected && styles.lastSelectedDay),
           ...(dayIsSingleSelected && styles.singleSelectedDay),
+          ...(dayIsFuture && styles.futureDay), // Apply futureDay style if it's a future day
         }}
-        onClick={() => handleDayClick(i)}
-      >
+        onClick={!dayIsFuture ? () => handleDayClick(i) : undefined} // Disable onClick for future days
+        >
         {i}
       </Box>
     );
@@ -233,6 +245,7 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
               width: "75px",
             }}
             variant="contained"
+            onClick={() => closeModal && closeModal()}
           >
             OK
           </Button>
@@ -252,6 +265,10 @@ const stylesIsMobile = {
 };
 
 const styles = {
+  futureDay: {
+    color: 'grey',
+    cursor: 'not-allowed',
+  },
   headerIsMobile: {
     justifyContent: "space-between",
   },

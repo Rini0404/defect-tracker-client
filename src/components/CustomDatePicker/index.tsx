@@ -396,7 +396,7 @@ const styles = {
   isMobileContainer: {
     display: "flex",
     width: "90vw",
-    height: "95vh",
+    height: "87vh",
   },
   tree: {
     height: "85%",

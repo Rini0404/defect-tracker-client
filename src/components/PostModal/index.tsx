@@ -58,53 +58,6 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
     );
   };
 
-  const handleSubmit = async () => {
-    try {
-      const payload = {
-        type: selectedDefectType,
-        category: selectedDefectCategory,
-        date: new Date().toISOString().slice(0, 10),
-      };
-      console.log("Request Payload: ", payload);
-
-      const response = await fetch(`${BASE_URL}/addDefect`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      console.log("Raw Response: ", response);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error(`Expected JSON, but received ${contentType}`);
-      }
-
-      const data = await response.json();
-      if (!data) {
-        throw new Error(`No data received`);
-      }
-
-      const { type, category, date } = data.defect;
-
-      dispatch(addSingleDefect(type, date, category));
-    } catch (error) {
-      console.error("Error in handleSubmit: ", error);
-    }
-  };
-
-  const allDefects = [
-    ...defectCategoryMapping.HumanError,
-    ...defectCategoryMapping.MachineError,
-    ...defectCategoryMapping.ManufacturerError,
-  ];
-
   const [openDateModal, setOpenDateModal] = useState<boolean>(false);
 
   const [selectedDates, setSelectedDates] = React.useState<(Date | null)[]>([]);
@@ -126,6 +79,58 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
       );
     }
   };
+
+  const handleSubmit = async () => {
+
+    // convert selectedDates to "YYYY-MM-DD" format, the dates are an array of one
+    const selectedDate = selectedDates[0]?.toISOString().slice(0, 10);
+
+    try {
+      const payload = {
+        type: selectedDefectType,
+        category: selectedDefectCategory,
+        date: selectedDate,
+      };
+      console.log("Request Payload: ", payload);
+
+      const response = await fetch(`${BASE_URL}/addDefect`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error(`Expected JSON, but received ${contentType}`);
+      }
+
+      const data = await response.json();
+
+      if (!data) {
+        throw new Error(`No data received`);
+      }
+
+      const { type, category, date } = data.defect;
+
+      dispatch(addSingleDefect(type, date, category));
+    } catch (error) {
+      console.error("Error in handleSubmit: ", error);
+    }
+  };
+
+  const allDefects = [
+    ...defectCategoryMapping.HumanError,
+    ...defectCategoryMapping.MachineError,
+    ...defectCategoryMapping.ManufacturerError,
+  ];
+
 
   return (
     <Modal
@@ -338,6 +343,7 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
           >
             <Box sx={style.calendarContainer}>
               <SimpleCalendar
+                closeModal={() => setOpenDateModal(false)}
                 selectedDates={selectedDates}
                 side="center"
                 date={currentDate}
@@ -361,7 +367,7 @@ const style = {
     bgcolor: "background.paper",
     p: 2,
     borderRadius: "20px",
-    height: { xs: "95vh", md: "90vh" }, // adjust height based on screen size
+    height: { xs: "87vh", md: "90vh" }, // adjust height based on screen size
     width: { xs: "95vw", md: "55vw" }, // adjust width based on screen size
     boxShadow: 24,
     display: "flex",
