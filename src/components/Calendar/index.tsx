@@ -166,7 +166,7 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
           isMobile && {
             justifyContent: "center",
             width: "100%",
-            height: "350px",
+            height: "375px",
             backgroundColor: "white",
             borderRadius: "10px",
             marginBottom: "10px",
@@ -309,7 +309,6 @@ const styles = {
     right: "0",
     marginRight: "20px",
     marginBottom: "20px",
-    position: "absolute",
   },
   dateBox: {
     padding: "5px",
