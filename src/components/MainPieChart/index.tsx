@@ -157,9 +157,9 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
         height: "100vh",
         width: "100vw",
+        marginTop: "3.5%",
       }}
     >
       {isMobile && (
