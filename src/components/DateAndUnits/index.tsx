@@ -61,7 +61,7 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({
 
       <Box sx={isMobile ? style.isMobileUnitsContainer : style.unitsContainer}>
         <h4 className="container__units-text">Defective Units</h4>
-        <p className="container__units-number">You have {defectCount}</p>
+        <p className="container__units-number">You have {defectCount} total</p>
       </Box>
 
       <Divider

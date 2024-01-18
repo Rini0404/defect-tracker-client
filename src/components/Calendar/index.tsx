@@ -159,7 +159,7 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
           !isMobile && {
             backgroundColor: "white",
             width: "65%",
-            height: "350px",
+            height: "380px",
             borderRadius: "10px",
           }),
           ...(side === "center" &&
@@ -244,7 +244,9 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
           </Box>
         ))}
       </Box>
-      <Box sx={styles.days}>{calendarDays}</Box>
+      <Box sx={
+        isMobile ? styles.isMobileDays : styles.days
+      }>{calendarDays}</Box>
 
       {side === "center" && (
         <Box sx={styles.okButton}>
@@ -267,7 +269,7 @@ const SimpleCalendar: React.FC<CelendarProps> = ({
 const stylesIsMobile = {
   mainContainer: {
     justifyContent: "center",
-    width: "90%",
+    width: "95%",
     height: "300px",
     backgroundColor: "white",
     borderRadius: "10px",
@@ -344,6 +346,11 @@ const styles = {
     display: "flex",
     flexWrap: "wrap",
   },
+  isMobileDays: {
+    display: "flex",
+    flexWrap: "wrap",
+    width: "100%",
+  },
   day: {
     flex: "0 0 14.28%", // Set fixed width (100% / 7 days)
     textAlign: "center",
@@ -352,9 +359,9 @@ const styles = {
     boxSizing: "border-box", // Ensures padding is included in width
   },
   isMobileDay: {
-    flex: "0 0 0%", 
+    flex: "0 0 0%", // Set fixed width (100% / 7 days)
     textAlign: "center",
-    padding: "10px",
+    padding: "8px",
     cursor: "pointer",
     boxSizing: "border-box", // Ensures padding is included in width
     width: "100%",

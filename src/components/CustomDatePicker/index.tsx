@@ -115,7 +115,6 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
       endDay = selectedDates[0];
     }
     
-    
     dispatch(
       setDateRange(startDay?.toString() ?? null, endDay?.toString() ?? null)
     );
@@ -352,16 +351,14 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    marginBottom: "40px",
+    marginBottom: "50px",
   },
   mobileDateRangeBox: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "10px",
-    paddingBottom: "10px",
-    borderBottom: "1px solid lightgrey",
+    paddingBottom: "20px",
   },
   dateRangeBox: {
     display: "flex",
