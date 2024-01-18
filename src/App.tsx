@@ -106,7 +106,7 @@ const style = {
     justifyContent: "center",
     alignItems: "center",
     borderRadius: "20px",
-    width: "100px",
+    width: "150px",
   },
   defectCountAnPichartContainer: {
     display: "flex",

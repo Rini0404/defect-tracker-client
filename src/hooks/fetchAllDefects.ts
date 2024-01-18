@@ -29,6 +29,8 @@ export const useFetchDefects = (url: string) => {
 
         const data = await response.json();
 
+        console.log("ALL DEFECTS ", data)
+
         dispatch(setDateRange(sevenDaysAgo.toISOString().split('T')[0], new Date().toISOString().split('T')[0]));
 
         // get data, then parse it by date. But populate the store with all the data and use that to parse it by date

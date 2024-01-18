@@ -56,7 +56,7 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
         setIsMobile(true);
         // Example breakpoint for mobile devices
         setChartSize({ width: 600, height: 400 }); // Smaller size for mobile
-        setRadius(200);
+        setRadius(150);
       } else {
         setIsMobile(false);
         setChartSize({ width: 1000, height: 600 }); // Larger size for desktop
@@ -80,7 +80,7 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
   });
 
   const data: any = [];
-
+  console.log("Defects: ", defects)
   Object.entries(defects).forEach(([categoryKey, defectTypes]) => {
     const category = categoryKey as DefectCategory;
     defectCategoryMapping[category].forEach((defectTypeKey) => {
@@ -99,36 +99,107 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
 
   const colorUsageCount: { [key: string]: number } = {};
 
+  Object.keys(COLOR_SHADES).forEach(category => {
+    colorUsageCount[category] = 0;
+  });
+
+
   const getFillColor = (category: string | number, count: number) => {
-    return COLOR_SHADES[category][count % COLOR_SHADES[category].length];
+    const colorIndex = count % COLOR_SHADES[category].length;
+    return COLOR_SHADES[category][colorIndex];
   };
 
   // Generate legend items
-  const legendItems = data.map(
-    (entry: { category: string | number }, index: any) => {
-      const fillColor = getFillColor(
-        entry.category,
-        colorUsageCount[entry.category] || 0
-      );
-      colorUsageCount[entry.category] =
-        (colorUsageCount[entry.category] || 0) + 1;
-      return { ...entry, fillColor };
-    }
-  );
+  const legendItems = data.map((entry: { category: string | number; }) => {
+    const fillColor = getFillColor(entry.category, colorUsageCount[entry.category]);
+    colorUsageCount[entry.category] += 1;
+    return { ...entry, fillColor };
+  });
+
+  Object.keys(COLOR_SHADES).forEach(category => {
+    colorUsageCount[category] = 0;
+  });
+
+  if(data.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          width: "100vw",
+        }}
+      >
+        <Box sx={{ fontSize: 30 }}>No Defects</Box>
+      </Box>
+    );
+  }
+  
+
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", width: "100vw" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
       {isMobile && (
-        <Box sx={{ width: "90%", padding: 2, backgroundColor: '#f5f5f5', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: 2 }}>
-          {legendItems.map((item: { fillColor: any; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; value: any; }, index: React.Key | null | undefined) => (
-            <Box key={index} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "5px" }}>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Box sx={{ width: 20, height: 20, backgroundColor: item.fillColor, marginRight: 1 }}></Box>
-                <Box>{item.name}</Box>
+        <Box
+          sx={{
+            width: "90%",
+            padding: 2,
+          }}
+        >
+          {legendItems.map(
+            (
+              item: {
+                fillColor: any;
+                name:
+                  | string
+                  | number
+                  | boolean
+                  | React.ReactElement<
+                      any,
+                      string | React.JSXElementConstructor<any>
+                    >
+                  | Iterable<React.ReactNode>
+                  | React.ReactPortal
+                  | null
+                  | undefined;
+                value: any;
+              },
+              index: React.Key | null | undefined
+            ) => (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  margin: "5px",
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      backgroundColor: item.fillColor,
+                      marginRight: 1,
+                    }}
+                  ></Box>
+                  <Box>{item.name}</Box>
+                </Box>
+                <Box>{`${item.value}%`}</Box>
               </Box>
-              <Box>{`${item.value}%`}</Box>
-            </Box>
-          ))}
+            )
+          )}
         </Box>
       )}
       <PieChart width={chartSize.width} height={chartSize.height}>

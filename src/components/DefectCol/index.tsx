@@ -97,7 +97,6 @@ const style = {
     width: "30vw",
     height: "100%",
     borderRadius: "0px",
-    backgroundColor: 'red',
   },
   isMobileContainer: {
     width: "100%",

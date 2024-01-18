@@ -81,6 +81,15 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
   };
 
   const handleSubmit = async () => {
+    if (!selectedDefectType) {
+      alert("Please select a defect type");
+      return;
+    }
+
+    if (!selectedDates[0]) {
+      alert("Please select a date");
+      return;
+    }
 
     // convert selectedDates to "YYYY-MM-DD" format, the dates are an array of one
     const selectedDate = selectedDates[0]?.toISOString().slice(0, 10);
@@ -91,7 +100,8 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
         category: selectedDefectCategory,
         date: selectedDate,
       };
-      console.log("Request Payload: ", payload);
+
+      console.log("payload: ", payload);
 
       const response = await fetch(`${BASE_URL}/addDefect`, {
         method: "POST",
@@ -131,6 +141,18 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
     ...defectCategoryMapping.ManufacturerError,
   ];
 
+  const getCategoryForDefectType = (
+    defectType: DefectType
+  ): DefectCategory | null => {
+    if (defectCategoryMapping.HumanError.includes(defectType)) {
+      return DefectCategory.HumanError;
+    } else if (defectCategoryMapping.MachineError.includes(defectType)) {
+      return DefectCategory.MachineError;
+    } else if (defectCategoryMapping.ManufacturerError.includes(defectType)) {
+      return DefectCategory.ManufacturerError;
+    }
+    return null;
+  };
 
   return (
     <Modal
@@ -148,7 +170,18 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
               setOpenDateModal(true);
             }}
           >
-            <p style={{ fontSize: "22px" }}>January 15, 2024</p>
+            <p style={{ fontSize: "22px" }}>
+              {
+                // date in jan 15, 2021 format
+                selectedDates[0]
+                  ? selectedDates[0].toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
+                  : "Select Date"
+              }
+            </p>
           </Button>
         </Box>
 
@@ -179,16 +212,21 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
                         fontSize: "14px",
                         textAlign: "center",
                         backgroundColor: getColorForDefectType(defectType),
-                        ...(isSelectedDefect(
-                          defectType,
-                          DefectCategory.HumanError
-                        ) && style.selectedItem),
+                        ...(getCategoryForDefectType(defectType) !== null &&
+                          isSelectedDefect(
+                            defectType,
+                            getCategoryForDefectType(
+                              defectType
+                            ) as DefectCategory
+                          ) &&
+                          style.selectedItem),
                       }}
                       onClick={() => {
-                        handleSelectDefect(
-                          defectType,
-                          DefectCategory.HumanError
-                        );
+                        const defectCategory =
+                          getCategoryForDefectType(defectType);
+                        if (defectCategory) {
+                          handleSelectDefect(defectType, defectCategory);
+                        }
                       }}
                     >
                       {newLineFormater(defectType)}
@@ -197,6 +235,7 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
                 </Grid>
               </Grid>
             ))}
+
             <Box sx={style.buttonsContainer}>
               <Button
                 variant="contained"

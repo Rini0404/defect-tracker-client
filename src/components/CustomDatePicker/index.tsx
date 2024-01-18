@@ -112,6 +112,8 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
       return;
     }
 
+    console.log("TEST: ", startDay?.toString() ?? null, endDay?.toString() ?? null)
+    
     dispatch(
       setDateRange(startDay?.toString() ?? null, endDay?.toString() ?? null)
     );

@@ -1,4 +1,4 @@
-import { DefectCategory, DefectData, DefectJsonTypes } from "../types";
+import { DefectCategory, DefectData, DefectJsonTypes, defectCategoryMapping } from "../types";
 import { ADD_SINGLE_DEFECT, INJECT_DEFECTS, SET_DATE_RANGE, UPDATE_DEFECTS_BY_DATE } from "./types";
 
 interface DataType {
@@ -46,28 +46,32 @@ const defectReducer = (state = initialState, action: DefectState) => {
           endDate: action.data.dateRange.endDate,
         },
       };
+
     case UPDATE_DEFECTS_BY_DATE: {
+      // console.log("ALL DEFECTS ", state.allDefects)
       const { startDate, endDate } = state.dateRange;
       const organizedDefects: DefectJsonTypes = {};
-      Object.keys(state.allDefects).forEach(categoryKey => {
-        const categoryKeyAsString = categoryKey as keyof typeof DefectCategory;
-        const category = state.allDefects[categoryKeyAsString];
-        if (category) {
-          organizedDefects[categoryKeyAsString] = {};
 
-          Object.keys(category).forEach(defectTypeKey => {
-            const defectTypeArray = category[defectTypeKey as keyof typeof category];
-            if (defectTypeArray) {
-              organizedDefects[categoryKeyAsString]![defectTypeKey as keyof typeof category] = defectTypeArray.filter((defect: DefectData) => {
-                const defectDate = new Date(defect.timestamp);
-                const start = startDate ? new Date(startDate) : new Date(0);
-                const end = endDate ? new Date(endDate) : new Date();
-                return defectDate >= start && defectDate <= end;
-              });
-            }
-          });
-        }
+      // Iterate over each defect category
+      Object.keys(defectCategoryMapping).forEach(categoryKey => {
+        const categoryDefectTypes = defectCategoryMapping[categoryKey as keyof typeof defectCategoryMapping];
+        organizedDefects[categoryKey] = {};
+
+        // Filter defects of each type within the category
+        categoryDefectTypes.forEach(defectType => {
+          const defectTypeArray = state.allDefects[categoryKey]?.[defectType];
+          if (defectTypeArray) {
+            organizedDefects[categoryKey][defectType] = defectTypeArray.filter((defect: DefectData) => {
+              const defectDate = new Date(defect.timestamp);
+              const start = startDate ? new Date(startDate) : new Date(0);
+              const end = endDate ? new Date(endDate) : new Date();
+              return defectDate >= start && defectDate <= end;
+            });
+          }
+        });
       });
+
+      console.log("UPDATE_DEFECTS_BY_DATE", organizedDefects);
 
       return {
         ...state,
