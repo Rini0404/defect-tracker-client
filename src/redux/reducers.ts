@@ -48,7 +48,6 @@ const defectReducer = (state = initialState, action: DefectState) => {
       };
 
     case UPDATE_DEFECTS_BY_DATE: {
-      console.log("ALL DEFECTS ", state.allDefects)
       const { startDate, endDate } = state.dateRange;
 
       const start = startDate ? new Date(startDate) : new Date(0);
@@ -56,8 +55,6 @@ const defectReducer = (state = initialState, action: DefectState) => {
       const end = endDate ? new Date(endDate) : new Date();
       end.setHours(23, 59, 59, 999);
 
-      console.log("Adjusted START DATE: ", start);
-      console.log("Adjusted END DATE: ", end);
 
       const organizedDefects: DefectJsonTypes = {};
 
@@ -73,14 +70,12 @@ const defectReducer = (state = initialState, action: DefectState) => {
               const parts = defect.timestamp.split('-');
               const defectDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
 
-              console.log(`Defect Timestamp: ${defectDate}, Defect Type: ${defectType}`);
               return defectDate >= start && defectDate <= end;
             });
           }
         });
       });
 
-      console.log("UPDATE_DEFECTS_BY_DATE", organizedDefects);
 
       return {
         ...state,
@@ -107,6 +102,7 @@ const defectReducer = (state = initialState, action: DefectState) => {
 
       // Parse the defect date as local time
       const parts = timestamp.split('-');
+      
       const defectDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
 
       // Adjusted start and end dates to cover the entire day

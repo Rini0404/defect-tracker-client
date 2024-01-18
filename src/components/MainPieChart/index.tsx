@@ -80,7 +80,7 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
   });
 
   const data: any = [];
-  console.log("Defects: ", defects)
+
   Object.entries(defects).forEach(([categoryKey, defectTypes]) => {
     const category = categoryKey as DefectCategory;
     defectCategoryMapping[category].forEach((defectTypeKey) => {

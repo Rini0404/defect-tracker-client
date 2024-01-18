@@ -70,6 +70,8 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
   const [selectedDates, setSelectedDates] = React.useState<(Date | null)[]>([]);
   const [currentDate, setCurrentDate] = React.useState(new Date());
 
+  console.log("selectedDates", selectedDates)
+
   const onSelectDay = (selectedDate: Date) => {
     if (selectedDates.length === 2) {
       setSelectedDates([selectedDate]); // Start new selection if 2 dates are already selected
@@ -105,14 +107,14 @@ export const CustomDateRangePicker: React.FC<CustomProps> = ({
   };
 
   const updateDateSelection = () => {
-    const startDay = selectedDates[0];
-    const endDay = selectedDates[1];
+    let startDay = selectedDates[0];
+    let endDay = selectedDates[1];
 
-    if (!startDay || !endDay) {
-      return;
+    // if only one day is selected, set the end day to the start day in here
+    if (selectedDates.length === 1) {
+      endDay = selectedDates[0];
     }
-
-    console.log("TEST: ", startDay?.toString() ?? null, endDay?.toString() ?? null)
+    
     
     dispatch(
       setDateRange(startDay?.toString() ?? null, endDay?.toString() ?? null)

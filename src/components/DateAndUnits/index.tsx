@@ -5,6 +5,7 @@ import Modal from "@mui/material/Modal";
 import { CustomDateRangePicker } from "../CustomDatePicker";
 import { useSelector } from "react-redux";
 import { palette } from "../../theme";
+import { parseAsLocalDate } from "../../utils/dateFormatter";
 
 type DateAndUnitsProps = {
   defectCount: number;
@@ -21,9 +22,9 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({
 
   const { endDate } = dateRange;
 
-  const endDateObj = new Date(endDate);
-
-  const endDateLocal =
+  const endDateObj = parseAsLocalDate(endDate);
+  
+  const endDateLocal = 
     endDateObj instanceof Date && !isNaN(endDateObj.getTime())
       ? endDateObj.toLocaleDateString("en-US", {
           year: "numeric",
@@ -31,7 +32,7 @@ export const DateAndUnits: React.FC<DateAndUnitsProps> = ({
           day: "numeric",
         })
       : "Invalid Date";
-
+  
   return (
     <Box
       sx={
@@ -105,6 +106,9 @@ const style = {
     display: "flex",
     flexDirection: "column",
     textAlign: "right",
+    alignItems: "flex-end",
+    // not the best fix but will do for now.
+    marginRight: "-25%",
   },
   button: {
     backgroundColor: "#F2F2F2",
@@ -132,6 +136,7 @@ const style = {
     flexGrowth: "1",
     justifyContent: "space-between",
     width: "100%",
+    backgroundColor: "pink",
   },
   dateAndUnitsContainer: {
     display: "flex",

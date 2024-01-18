@@ -101,8 +101,6 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
         date: selectedDate,
       };
 
-      console.log("payload: ", payload);
-
       const response = await fetch(`${BASE_URL}/addDefect`, {
         method: "POST",
         headers: {
