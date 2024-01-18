@@ -65,7 +65,7 @@ export const PostModal: React.FC<PostModalProps> = ({ setOpen }) => {
   const [currentDate, setCurrentDate] = React.useState(new Date());
 
   const onSelectDay = (selectedDate: Date) => {
-    setSelectedDates([selectedDate]); // Single date selection or start of a new range
+    setSelectedDates([selectedDate]); 
   };
 
   const handleMonthChange = (direction: "left" | "right") => {

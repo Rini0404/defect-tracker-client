@@ -17,7 +17,6 @@ export const useFetchDefects = (url: string) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         // ! TODO: Check local storage for date range, if it exists, use it, if not, use the default
         
         const today = new Date();
@@ -28,8 +27,6 @@ export const useFetchDefects = (url: string) => {
         }
 
         const data = await response.json();
-
-        console.log("ALL DEFECTS ", data)
 
         dispatch(setDateRange(sevenDaysAgo.toISOString().split('T')[0], new Date().toISOString().split('T')[0]));
 

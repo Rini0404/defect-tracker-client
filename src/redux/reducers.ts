@@ -48,23 +48,32 @@ const defectReducer = (state = initialState, action: DefectState) => {
       };
 
     case UPDATE_DEFECTS_BY_DATE: {
-      // console.log("ALL DEFECTS ", state.allDefects)
+      console.log("ALL DEFECTS ", state.allDefects)
       const { startDate, endDate } = state.dateRange;
+
+      const start = startDate ? new Date(startDate) : new Date(0);
+      start.setHours(0, 0, 0, 0);
+      const end = endDate ? new Date(endDate) : new Date();
+      end.setHours(23, 59, 59, 999);
+
+      console.log("Adjusted START DATE: ", start);
+      console.log("Adjusted END DATE: ", end);
+
       const organizedDefects: DefectJsonTypes = {};
 
       // Iterate over each defect category
       Object.keys(defectCategoryMapping).forEach(categoryKey => {
         const categoryDefectTypes = defectCategoryMapping[categoryKey as keyof typeof defectCategoryMapping];
         organizedDefects[categoryKey] = {};
-
         // Filter defects of each type within the category
         categoryDefectTypes.forEach(defectType => {
           const defectTypeArray = state.allDefects[categoryKey]?.[defectType];
           if (defectTypeArray) {
             organizedDefects[categoryKey][defectType] = defectTypeArray.filter((defect: DefectData) => {
-              const defectDate = new Date(defect.timestamp);
-              const start = startDate ? new Date(startDate) : new Date(0);
-              const end = endDate ? new Date(endDate) : new Date();
+              const parts = defect.timestamp.split('-');
+              const defectDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+
+              console.log(`Defect Timestamp: ${defectDate}, Defect Type: ${defectType}`);
               return defectDate >= start && defectDate <= end;
             });
           }
@@ -78,6 +87,8 @@ const defectReducer = (state = initialState, action: DefectState) => {
         organizedDefects,
       };
     }
+
+
     case ADD_SINGLE_DEFECT: {
       const { defectType, timestamp, defectCategory } = action.defect;
       const newDefect = { defectType, timestamp, category: defectCategory };
@@ -94,14 +105,19 @@ const defectReducer = (state = initialState, action: DefectState) => {
         },
       };
 
-      // Check if the new defect falls within the date range
-      const defectDate = new Date(timestamp);
-      const startDate = state.dateRange.startDate ? new Date(state.dateRange.startDate) : new Date(0);
-      const endDate = state.dateRange.endDate ? new Date(state.dateRange.endDate) : new Date();
+      // Parse the defect date as local time
+      const parts = timestamp.split('-');
+      const defectDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+
+      // Adjusted start and end dates to cover the entire day
+      const start = state.dateRange.startDate ? new Date(state.dateRange.startDate) : new Date(0);
+      start.setHours(0, 0, 0, 0);
+      const end = state.dateRange.endDate ? new Date(state.dateRange.endDate) : new Date();
+      end.setHours(23, 59, 59, 999);
 
       let updatedOrganizedDefects = { ...state.organizedDefects };
 
-      if (defectDate >= startDate && defectDate <= endDate) {
+      if (defectDate >= start && defectDate <= end) {
         updatedOrganizedDefects = {
           ...state.organizedDefects,
           [defectCategory]: {
@@ -113,13 +129,14 @@ const defectReducer = (state = initialState, action: DefectState) => {
           },
         };
       }
-      console.log('updatedAllDefects', updatedAllDefects)
+
       return {
         ...state,
         allDefects: updatedAllDefects,
         organizedDefects: updatedOrganizedDefects,
       };
     }
+
 
     default:
       return state;
