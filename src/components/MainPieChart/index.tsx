@@ -1,63 +1,164 @@
+import React, { useEffect, useState } from "react";
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { Box } from "@mui/material";
+import {
+  DefectCategory,
+  DefectJsonTypesForChart,
+  DefectType,
+  defectCategoryMapping,
+} from "../../types";
+import { renderCustomizedLabel } from "../CustomLineLabels";
 
-import { Box, Typography } from "@mui/material";
-import { PieChart, Pie, Cell } from "recharts";
+const COLOR_SHADES: { [key: string]: string[] } = {
+  MachineError: [
+    "#FFA500",
+    "#E59400",
+    "#CC8400",
+    "#B27300",
+    "#996300",
+    "#7F5200",
+  ], // Shades of orange
+  HumanError: [
+    "#FF0000",
+    "#E60000",
+    "#CC0000",
+    "#B30000",
+    "#990000",
+    "#800000",
+    "#660000",
+    "#4D0000",
+    "#330000",
+    "#1A0000",
+    "#1A0000",
+  ], // Shades of red
+  ManufacturerError: [
+    "#800080",
+    "#730073",
+    "#660066",
+    "#590059",
+    "#4C004C",
+    "#3F003F",
+  ], // Shades of purple
+};
 
-const data = [
-  { name: "Type A", value: 400 },
-  { name: "Type B", value: 300 },
-  { name: "Type C", value: 300 },
-  { name: "Type D", value: 200 },
-];
+export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
+  defects,
+}) => {
+  const [chartSize, setChartSize] = useState({ width: 300, height: 300 });
+  const [radius, setRadius] = useState(250);
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
+  useEffect(() => {
+    function handleResize() {
+      // Adjust size based on the window width
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+        // Example breakpoint for mobile devices
+        setChartSize({ width: 600, height: 400 }); // Smaller size for mobile
+        setRadius(200);
+      } else {
+        setIsMobile(false);
+        setChartSize({ width: 1000, height: 600 }); // Larger size for desktop
+        setRadius(250);
+      }
+    }
 
-export const MainPieChart: React.FC = () => {
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial size adjustment
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  let totalDefects = 0;
+  Object.values(defects).forEach((category) => {
+    Object.values(category).forEach((defectArray) => {
+      totalDefects += defectArray.length;
+    });
+  });
+
+  const data: any = [];
+
+  Object.entries(defects).forEach(([categoryKey, defectTypes]) => {
+    const category = categoryKey as DefectCategory;
+    defectCategoryMapping[category].forEach((defectTypeKey) => {
+      const defectType = defectTypeKey as DefectType;
+      const count = defectTypes[defectType]?.length || 0;
+      const percentage = parseFloat(((count / totalDefects) * 100).toFixed(2));
+      if (percentage > 0) {
+        data.push({
+          name: defectType,
+          value: percentage,
+          category,
+        });
+      }
+    });
+  });
+
+  const colorUsageCount: { [key: string]: number } = {};
+
+  const getFillColor = (category: string | number, count: number) => {
+    return COLOR_SHADES[category][count % COLOR_SHADES[category].length];
+  };
+
+  // Generate legend items
+  const legendItems = data.map(
+    (entry: { category: string | number }, index: any) => {
+      const fillColor = getFillColor(
+        entry.category,
+        colorUsageCount[entry.category] || 0
+      );
+      colorUsageCount[entry.category] =
+        (colorUsageCount[entry.category] || 0) + 1;
+      return { ...entry, fillColor };
+    }
+  );
 
   return (
-    <Box 
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "100%",
-      height: "90vh",
-    }}
-  >
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
-    >
-      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-        Defects by Type
-      </Typography>
-
-      <PieChart width={400} height={400}>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", width: "100vw" }}>
+      {isMobile && (
+        <Box sx={{ width: "90%", padding: 2, backgroundColor: '#f5f5f5', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', marginBottom: 2 }}>
+          {legendItems.map((item: { fillColor: any; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; value: any; }, index: React.Key | null | undefined) => (
+            <Box key={index} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "5px" }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box sx={{ width: 20, height: 20, backgroundColor: item.fillColor, marginRight: 1 }}></Box>
+                <Box>{item.name}</Box>
+              </Box>
+              <Box>{`${item.value}%`}</Box>
+            </Box>
+          ))}
+        </Box>
+      )}
+      <PieChart width={chartSize.width} height={chartSize.height}>
         <Pie
+          dataKey="value"
+          isAnimationActive={false}
           data={data}
           cx="50%"
           cy="50%"
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-          label
+          outerRadius={radius}
+          innerRadius={40}
+          labelLine={false}
+          label={isMobile ? false : renderCustomizedLabel}
         >
-          {data.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={COLORS[index % COLORS.length]}
-            />
-          ))}
+          {data.map((entry: { category: any }, index: any) => {
+            const category = entry.category;
+            colorUsageCount[category] = colorUsageCount[category] || 0;
+            const fillColor =
+              COLOR_SHADES[category][
+                colorUsageCount[category] % COLOR_SHADES[category].length
+              ];
+            colorUsageCount[category] += 1;
+
+            return <Cell key={`cell-${index}`} fill={fillColor} />;
+          })}
         </Pie>
+        <Tooltip />
       </PieChart>
     </Box>
-  </Box>
-  )
-}
+  );
+};
+
+export default MainPieChart;

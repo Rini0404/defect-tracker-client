@@ -8,7 +8,7 @@ import { Header } from "./components/Header";
 import { countDefects } from "./utils/counter";
 import { DefectColumn } from "./components/DefectCol";
 import store from "./redux/store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { PostModal } from "./components/PostModal";
@@ -35,6 +35,8 @@ function App() {
     `${BASE_URL}/getAllDefects`
   );
 
+  const { organizedDefects } = useSelector((state: any) => state.defects);
+
   if (loading) return <LoadingOverlay open={loading} title="Loading Defects" />;
 
   if (error) return <div>Error: {error}</div>;
@@ -59,13 +61,13 @@ function App() {
         >
           {isMobile ? (
             <>
-              <MainPieChart />
+              <MainPieChart defects={organizedDefects} />
               <DefectColumn isMobile={isMobile} />
             </>
           ) : (
             <>
               <DefectColumn isMobile={isMobile} />
-              <MainPieChart />
+              <MainPieChart defects={organizedDefects} />
             </>
           )}
         </Box>

@@ -56,3 +56,7 @@ export type DefectJsonTypes = {
     [defectType: string]: DefectData[];
   };
 };
+
+export type DefectJsonTypesForChart = {
+  [key in DefectCategory]?: DefectTypeData;
+};
