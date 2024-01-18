@@ -31,17 +31,18 @@ function App() {
 
   const [openPostModal, setOpenPostModal] = React.useState(false);
 
-  const { defects, loading, error } = useFetchDefects(
+  const { loading, error } = useFetchDefects(
     `${BASE_URL}/getAllDefects`
   );
 
   const { organizedDefects } = useSelector((state: any) => state.defects);
+  const { allDefects } = useSelector((state: any) => state.defects);
 
   if (loading) return <LoadingOverlay open={loading} title="Loading Defects" />;
 
   if (error) return <div>Error: {error}</div>;
 
-  const defectCounts = countDefects(defects ?? {});
+  const defectCounts = countDefects(allDefects ?? {});
 
   return (
     <div className="App">
@@ -93,8 +94,8 @@ export default () => (
 const style = {
   button: {
     position: "absolute",
-    bottom: "10px",
-    right: "10px",
+    bottom: "5%",
+    right: "4%",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: "20px",

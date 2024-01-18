@@ -108,7 +108,7 @@ const style = {
     textAlign: "right",
     alignItems: "flex-end",
     // not the best fix but will do for now.
-    marginRight: "-25%",
+    marginRight: "-22%",
   },
   button: {
     backgroundColor: "#F2F2F2",
@@ -136,7 +136,6 @@ const style = {
     flexGrowth: "1",
     justifyContent: "space-between",
     width: "100%",
-    backgroundColor: "pink",
   },
   dateAndUnitsContainer: {
     display: "flex",
