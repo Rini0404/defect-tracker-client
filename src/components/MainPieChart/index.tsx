@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Label } from "recharts";
 import { Box } from "@mui/material";
 import {
   DefectCategory,
@@ -8,6 +8,7 @@ import {
   defectCategoryMapping,
 } from "../../types";
 import { renderCustomizedLabel } from "../CustomLineLabels";
+import Logo from "../../imgs/logo.png";
 
 const COLOR_SHADES: { [key: string]: string[] } = {
   MachineError: [
@@ -99,10 +100,9 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
 
   const colorUsageCount: { [key: string]: number } = {};
 
-  Object.keys(COLOR_SHADES).forEach(category => {
+  Object.keys(COLOR_SHADES).forEach((category) => {
     colorUsageCount[category] = 0;
   });
-
 
   const getFillColor = (category: string | number, count: number) => {
     const colorIndex = count % COLOR_SHADES[category].length;
@@ -110,17 +110,20 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
   };
 
   // Generate legend items
-  const legendItems = data.map((entry: { category: string | number; }) => {
-    const fillColor = getFillColor(entry.category, colorUsageCount[entry.category]);
+  const legendItems = data.map((entry: { category: string | number }) => {
+    const fillColor = getFillColor(
+      entry.category,
+      colorUsageCount[entry.category]
+    );
     colorUsageCount[entry.category] += 1;
     return { ...entry, fillColor };
   });
 
-  Object.keys(COLOR_SHADES).forEach(category => {
+  Object.keys(COLOR_SHADES).forEach((category) => {
     colorUsageCount[category] = 0;
   });
 
-  if(data.length === 0) {
+  if (data.length === 0) {
     return (
       <Box
         sx={{
@@ -135,9 +138,19 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
       </Box>
     );
   }
+
+  const CustomCenteredLabel = ({ viewBox }: any) => {
+    const { cx, cy } = viewBox;
   
-
-
+    return (
+      <foreignObject x={cx - 50} y={cy - 50} width={100} height={100}>
+        <div style={{ borderRadius: '50%', overflow: 'hidden', width: '100%', height: '100%' }}>
+          <img src={Logo} alt="Logo" style={{ width: '100%', height: '100%' }} />
+        </div>
+      </foreignObject>
+    );
+  };
+  
   return (
     <Box
       sx={{
@@ -225,6 +238,7 @@ export const MainPieChart: React.FC<{ defects: DefectJsonTypesForChart }> = ({
 
             return <Cell key={`cell-${index}`} fill={fillColor} />;
           })}
+          <Label content={<CustomCenteredLabel />} position="center" />
         </Pie>
         <Tooltip />
       </PieChart>
