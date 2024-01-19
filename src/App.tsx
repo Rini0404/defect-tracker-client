@@ -130,7 +130,7 @@ const style = {
     height: "100vh",
     bgcolor: "white",
     borderRadius: "10px",
-    overflow: "auto",
     position: "relative",
+    overflowX: "hidden",
   },
 };

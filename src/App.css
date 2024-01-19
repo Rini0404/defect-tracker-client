@@ -4,13 +4,13 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #d0d4db;
 }
 
 .App__container {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
 .App__container::-webkit-scrollbar {
   display: none;
 }
